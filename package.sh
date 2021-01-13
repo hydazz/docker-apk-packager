@@ -65,15 +65,5 @@ sleep 5
 [[ ${ARCH} = "armv7" ]] &&
 	REPO=$ARMV7
 
-echo -e "${BLUE}Packaging... This will take a while, run 'tail -f ${PWD}/build.log' in a new terminal for a live build log${NC}"
-build >build.log 2>&1
-
-if cat build.log | grep -q "Build Failed"; then
-	cat build.log
-	echo -e "${RED}Error: Build failed. see above for more information.${NC}"
-else
-	echo -e "${GREEN}Done! Files saved to ${OUTPUT}.${NC}"
-fi
-
-# cleanup
-rm -rf build.log
+echo -e "${BLUE}Packaging... This will take a while${NC}"
+build
