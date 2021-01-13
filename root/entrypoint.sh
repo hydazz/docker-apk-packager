@@ -8,10 +8,10 @@ mkdir -p \
 su abc -c "sudo chmod a+w /var/cache/distfiles"
 
 # setup key
-KEY=$(find /config -maxdepth 1 -name "*.rsa")
+KEY=$(find /config -name "*.rsa")
 if [[ -z ${KEY} ]]; then
 	echo "Error: No key is found"
-	sleep infinity
+	exit 1
 fi
 echo 'PACKAGER_PRIVKEY="'${KEY}'"' >/config/.abuild/abuild.conf
 
@@ -19,15 +19,12 @@ echo 'PACKAGER_PRIVKEY="'${KEY}'"' >/config/.abuild/abuild.conf
 APKBUILD=$(find /config -name "APKBUILD" | sed s/APKBUILD//g)
 if [[ -z ${APKBUILD} ]]; then
 	echo "Error: No APKBUILD is found"
-	sleep infinity
+	exit 1
 fi
-# support for packaging multiple packages in succession is theoretically possible
-for build in ${APKBUILD}; do
-	echo "Packaging ${build}APKBUILD for architecture: $(arch)"
-	wait 5
-	cd ${build}
-	su abc -c "abuild checksum"
-	su abc -c "abuild -r" || exit 1
-done
+
+# build n pack
+cd ${APKBUILD} || exit 1
+su abc -c "abuild checksum" || exit 1
+su abc -c "abuild -r" || exit 1
 
 mv /config/packages/config/* /out/package/
