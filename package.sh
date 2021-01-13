@@ -9,30 +9,50 @@ GREEN='\033[0;32m' # echo Green
 BOLD='\033[1;37m'  # echo White Bold
 NC='\033[0m'       # echo No Colour
 
-# error out before continuing if something is not supplied
-if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ]; then
-	echo -e "${RED}"
-	[[ -z $1 ]] &&
-		echo "Error: No build architecture specified"
-	[[ -z $2 ]] &&
-		echo "Error: No key location specified"
-	[[ -z $3 ]] &&
-		echo "Error: No package path specified"
-	[[ -z $4 ]] &&
-		echo "Error: No output directory specified"
-	echo -e "${NC}"
-	echo -e "${BOLD}Usage: ./package.sh <amd64/arm64/armv7> /path/to/key.rsa /path/to/package/ /path/to/output/${NC}"
-	exit 1
+helpFunction() {
+	echo ""
+	echo "Usage: $0 -a <arch> -k <key> -i <input> -o <output>"
+	echo -e "\t-a Architecture: Build architecture; supported architectures are amd64, arm64 and armv7"
+	echo -e "\t-k Key: FULL path to private signing key"
+	echo -e "\t-i Input: FULL path to the folder containing the APKBUILD file"
+	echo -e "\t-o Output: FULL path to the output folder"
+	echo -e "\t-t Testing: add the testing repo to the apk repository"
+	exit 1 # Exit script after printing help
+}
+
+while getopts "a:k:i:o:t:" opt; do
+	case "$opt" in
+	a) ARCH="$OPTARG" ;;
+	k) KEY="$OPTARG" ;;
+	i) INPUT="$OPTARG" ;;
+	o) OUTPUT="$OPTARG" ;;
+	t) TESTING="$OPTARG" ;;
+	?) helpFunction ;; # Print helpFunction in case parameter is non-existent
+	esac
+done
+
+# Print helpFunction in case parameters are empty
+if [ -z "$ARCH" ] || [ -z "$KEY" ] || [ -z "$INPUT" ] || [ -z "$OUTPUT" ]; then
+	echo "Some or all of the parameters are empty"
+	helpFunction
 fi
-if [ "$1" = "amd64" ] || [ "$1" = "arm64" ] || [ "$1" = "armv7" ]; then
+
+[[ $TESTING = "true" ]] &&
+	ARGS="-e TESTING=true"
+
+if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "arm64" ] || [ "$ARCH" = "armv7" ]; then
 	:
 else
 	echo -e "${RED}"
-	echo "Error: $1 is not a supported architecture"
+	echo "Error: $ARCH is not a supported architecture"
 	echo -e "${BOLD}Supported architectures: amd64, arm64, armv7"
 	echo -e "${NC}"
 	exit 1
 fi
+
+KEY_NAME=$(basename $KEY)
+APKBUILD_DIR=$(echo $INPUT | sed s/APKBUILD//g)
+FOLDER_NAME=$(basename $APKBUILD_DIR)
 
 # not my best work, i have no idea how to use jq.
 MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager --raw) # 'cache' manifest
@@ -40,18 +60,12 @@ AMD64="docker.io/vcxpz/apk-packager:latest@$(echo ${MANIFEST} | jq '.manifests[0
 ARM64="docker.io/vcxpz/apk-packager:latest@$(echo ${MANIFEST} | jq '.manifests[1] .digest' | sed 's/"//g')"
 ARMV7="docker.io/vcxpz/apk-packager:latest@$(echo ${MANIFEST} | jq '.manifests[2] .digest' | sed 's/"//g')"
 
-ARCH=$1
-KEY=$2
-KEY_NAME=$(basename $2)
-APKBUILD_DIR=$(echo $3 | sed s/APKBUILD//g)
-FOLDER_NAME=$(basename $APKBUILD_DIR)
-OUTPUT=$4
-
 function build() {
 	docker run --rm \
 		-v ${KEY}:/config/${KEY_NAME} \
 		-v ${APKBUILD_DIR}:/config/${FOLDER_NAME} \
 		-v ${OUTPUT}:/out \
+		${ARGS} \
 		${REPO}
 }
 
