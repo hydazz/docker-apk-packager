@@ -1,4 +1,7 @@
 #!/bin/bash
+[[ -n ${TESTING} ]] &&
+	echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
+
 apk update -q
 mkdir -p \
 	/out/package \
