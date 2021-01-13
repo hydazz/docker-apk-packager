@@ -1,5 +1,8 @@
 FROM alpine:edge
 
+# add local files
+COPY root/ /
+
 RUN \
    echo "**** install runtime packages ****" && \
    apk add --no-cache --upgrade \
@@ -10,8 +13,6 @@ RUN \
    echo "abc:abc" | chpasswd && \
    echo '%abc ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
    addgroup abc abuild && \
-   su abc -c "sudo mkdir -p \
-   /var/cache/distfiles \
-   /config/.abuild" && \
-   su abc -c "sudo chmod a+w /var/cache/distfiles" && \
-   echo 'PACKAGER_PRIVKEY="/config/key.rsa"' >/config/.abuild/abuild.conf
+   chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
