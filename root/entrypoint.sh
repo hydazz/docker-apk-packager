@@ -1,7 +1,7 @@
 #!/bin/bash
 apk update -q
 mkdir -p \
-	/out \
+	/out/package \
 	/var/cache/distfiles \
 	/config/.abuild
 
@@ -27,8 +27,7 @@ for build in ${APKBUILD}; do
 	wait 5
 	cd ${build}
 	su abc -c "abuild checksum"
-	su abc -c "abuild -r"
-	echo "Done Packaging ${build}APKBUILD!"
+	su abc -c "abuild -r" || echo "Build Failed"
 done
 
-mv /config/packages/config /out/package
+mv /config/packages/config/* /out/package/
