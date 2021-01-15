@@ -1,5 +1,7 @@
 ## docker-apk-packager
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a4bd56ccc0743c485f4a98423650ebe)](https://app.codacy.com/gh/hydazz/docker-apk-packager?utm_source=github.com&utm_medium=referral&utm_content=hydazz/docker-apk-packager&utm_campaign=Badge_Grade)
+
 apk-packager is a Docker image with an accompanying script to automate the process of building and packaging apk packages for x86_64, arm64 and armv7 from an x86_64 host. This project is currently under indefinite development, everything could be improved upon, but I am not a bashing sweat. So if you see something you can improve upon, even slightly open a PR, or if you find a bug/issue open an issue.
 
 ## Getting started
