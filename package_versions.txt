@@ -12,7 +12,7 @@ busybox-1.32.1-r0
 ca-certificates-20191127-r5
 ca-certificates-bundle-20191127-r5
 curl-7.74.0-r0
-expat-2.2.10-r0
+expat-2.2.10-r1
 fakeroot-1.25.3-r3
 file-5.39-r0
 fortify-headers-1.1-r0
@@ -53,5 +53,5 @@ readline-8.1.0-r0
 scanelf-1.2.8-r0
 ssl_client-1.32.1-r0
 sudo-1.9.5p1-r0
-tar-1.33-r0
+tar-1.33-r1
 zlib-1.2.11-r3
