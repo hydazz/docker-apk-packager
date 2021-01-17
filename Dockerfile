@@ -1,5 +1,7 @@
 FROM alpine:3.13
 
+ENV TERM="xterm"
+
 RUN \
    echo "**** install runtime packages ****" && \
    apk add --no-cache --upgrade \
