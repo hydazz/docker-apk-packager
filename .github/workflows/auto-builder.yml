@@ -40,9 +40,7 @@ jobs:
           docker build \
             --platform=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386,linux/ppc64le,linux/s390x \
             --output "type=image,push=true" \
-            --build-arg VERSION=$(curl -sX GET "https://api.github.com/repos/hydazz/docker-apk-packager/releases/latest" | jq -r .tag_name) \
             --tag vcxpz/apk-packager:latest \
-            --tag vcxpz/apk-packager:$(curl -sX GET "https://api.github.com/repos/hydazz/docker-apk-packager/releases/latest" | jq -r .tag_name) \
             --file Dockerfile .
 
       - name: Get New Package Versions From Image
