@@ -8,6 +8,7 @@ RUN \
       alpine-sdk \
       bash \
       sudo && \
+   echo "**** create abc user and setup sudo ****" && \
    adduser -h /config -D abc && \
    echo 'abc ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
    addgroup abc abuild && \
