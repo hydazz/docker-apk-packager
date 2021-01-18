@@ -40,13 +40,14 @@ jobs:
           docker build \
             --platform=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386,linux/ppc64le,linux/s390x \
             --output "type=image,push=true" \
+            --build-arg BUILD_DATE="$(date +%Y-%m-%d)"
             --tag vcxpz/apk-packager:latest \
             --file Dockerfile .
 
       - name: Get New Package Versions From Image
         run: |
-          docker run --rm --entrypoint /bin/sh -v "$PWD":/tmp vcxpz/apk-packager:latest -c "\
-            apk info -v | sort >/tmp/package_versions.txt"
+          docker run --rm --entrypoint /bin/sh -v ${PWD}:/tmp vcxpz/apk-packager:latest -c '\
+            apk info -v | sort >/tmp/package_versions.txt'
 
       - name: Update README
         run: |
