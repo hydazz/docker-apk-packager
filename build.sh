@@ -111,7 +111,7 @@ if [ "${docker}" = "false" ] || [ "${jq}" = "false" ] || [ "${buildx}" = "false"
 fi
 
 if ! docker info >/dev/null 2>&1; then
-	echo -e "${red}Error: The docker daemon is not running${nc}"
+	echo -e "${red}Error: Cannot connect to the Docker daemon. Is the docker daemon running?${nc}"
 	exit 1
 fi
 
