@@ -8,7 +8,7 @@ on:
     - cron: "0 0 * * 0"
 
 jobs:
-  edge:
+  alpine-edge:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,7 +45,7 @@ jobs:
             --tag vcxpz/apk-packager:edge \
             --file Dockerfile .
 
-  3_13:
+  alpine-3-13:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -106,7 +106,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: vcxpz/apk-packager
 
-  3_12:
+  alpine-3-12:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
