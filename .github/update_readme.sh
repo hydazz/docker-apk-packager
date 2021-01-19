@@ -41,10 +41,12 @@ If the build was successful you should see \`Build successful!\` in the terminal
 
 I have not incorporated an easy way to do this in the scripts but running the commands separately doesn't hurt, here's an example to build for all supported architectures.
 
-    #!/bin/bash
-    for arch in amd64 arm/v6 arm/v7 arm64 i386 ppc64le s390x; do
-    	./build.sh -a \$arch -k <key> -i <input> -o <output>
-    done
+\`\`\`bash
+#!/bin/bash
+for arch in amd64 arm/v6 arm/v7 arm64 i386 ppc64le s390x; do
+	./build.sh -a \$arch -k <key> -i <input> -o <output>
+done
+\`\`\`
 
 This will create the \`apk-packager\` folder in the \`/home/alex\` directory. Depending on what architectures you used the folder should have seperate subfolders for each architecture.
 
@@ -68,6 +70,73 @@ Follow these steps for every package and architecture, it does get tedious
 ## Getting started ( Windows )
 
 Comming Soon
+
+## Tested / Supported Building OS's
+
+From my testing building seems to work on any OS that supports Docker and QEMU.
+
+| OS                           | Tested | Notes                                                                          |
+| ---------------------------- | ------ | ------------------------------------------------------------------------------ |
+| Ubuntu/Debian                | No     | Requires some setting up, see here.                                            |
+| MacOS (via Docker Desktop)   | Yes    | jq must be installed                                                           |
+| Windows (via Docker Desktop) | Yes    | Obviously the script does not work on windows. see Getting started ( Windows ) |
+| CentOS/RHEL                  | No     | TBD                                                                            |
+
+I have not tested building on another architecture other that x64. I do not see why it wouldn't work
+
+## Setting Enviroment ( Dependencies )
+
+### MacOS
+
+MacOS only requires docker desktop and jq to be installed for everything to work smoothly. Docker desktop can downloaded from the docker [website](https://www.docker.com/products/docker-desktop). jq can be installed via brew:
+
+\`\`\`bash
+brew install jq
+\`\`\`
+
+### Windows
+
+Windows only requires docker desktop, as the build.sh script is not a batch script it will not work on Windows
+Docker desktop can downloaded from the docker [website](https://www.docker.com/products/docker-desktop).
+
+### Ubuntu/Debian
+
+Ubuntu/Debian doesn't have docker desktop so setup is a little more diffcult, qemu-user-static, jq, docker and docker buildx have to be installed.
+**Installing docker:**
+
+\`\`\`bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+\`\`\`
+
+**Installing docker buildx:**
+
+Download the latest binary release from <https://github.com/docker/buildx/releases/latest> and copy it to \`~/.docker/cli-plugins\` folder with name \`docker-buildx\`.
+
+\`\`\`bash
+chmod a+x ~/.docker/cli-plugins/docker-buildx
+\`\`\`
+
+verify docker buildx installation by running
+
+\`\`\`bash
+docker buildx ls
+\`\`\`
+
+see [here](https://github.com/docker/buildx/#installing) for more installation help
+
+**installing jq and qemu-user-static:**
+
+\`\`\`bash
+apt-get install jq qemu-user-static
+\`\`\`
+
+### Verify you can run other architectures on your system
+
+run \`docker buildx ls\`, this will give you a list of architectures your system can emulate.
+
+    NAME/NODE  DRIVER/ENDPOINT STATUS PLATFORMS
+    ...
+    ... linux/amd64, linux/arm64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6
 
 ## Supported Architectures / Alpine Versions
 
