@@ -45,7 +45,7 @@ jobs:
             --tag vcxpz/apk-packager:edge \
             --file Dockerfile .
 
-  3-13:
+  3_13:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -106,7 +106,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: vcxpz/apk-packager
 
-  3-12:
+  3_12:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
