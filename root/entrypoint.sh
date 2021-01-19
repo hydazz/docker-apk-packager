@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Echo init finish for test runs
+if [ -n "${TEST_RUN}" ]; then
+	echo '[services.d] done.'
+fi
+
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # set colours
 # ~~~~~~~~~~~~~~~~~~~~~~~
