@@ -147,7 +147,8 @@ output=$(
 # set architecture
 # not my best work, i have no idea how to use jq
 # ~~~~~~~~~~~~~~~~~~~~~~~
-MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager:${VERSION} --raw) # 'cache' manifest
+
+MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager:"${VERSION}" --raw) # 'cache' manifest
 
 [[ ${ARCH} = "amd64" ]] &&
 	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[0] .digest' | sed 's/"//g')"
