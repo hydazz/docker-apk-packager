@@ -8,7 +8,7 @@ on:
     - cron: "0 0 * * 0"
 
 jobs:
-  alpine-edge:
+  edge:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,32 +16,39 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         id: buildx
+
       - name: Docker Login
         uses: docker/login-action@v1
         with:
           username: vcxpz
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Github Login
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+
       - name: Build The Docker Image For Testing
         run: |
           docker build \
             --tag vcxpz/ci-build:ci-build \
             --build-arg TAG=edge \
             --file Dockerfile .
+
       - name: Test The Docker Image
         run: |
           export IMAGE="vcxpz/ci-build:ci-build"
           export TEST_SEARCH="\[services.d\] done."
           export RUN_ARGS="-e DEBUG=true -e TEST_RUN=true"
           curl -sSL https://raw.githubusercontent.com/hydazz/scripts/main/docker/docker-ci.sh | bash
+
       - name: Build And Push The Docker Image
         run: |
           docker buildx build \
@@ -52,7 +59,7 @@ jobs:
             --tag vcxpz/apk-packager:edge \
             --file Dockerfile .
 
-  alpine-3_13:
+  3-13:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -60,32 +67,39 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         id: buildx
+
       - name: Docker Login
         uses: docker/login-action@v1
         with:
           username: vcxpz
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Github Login
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+
       - name: Build The Docker Image For Testing
         run: |
           docker build \
             --tag vcxpz/ci-build:ci-build \
             --build-arg TAG=3.13 \
             --file Dockerfile .
+
       - name: Test The Docker Image
         run: |
           export IMAGE="vcxpz/ci-build:ci-build"
           export TEST_SEARCH="\[services.d\] done."
           export RUN_ARGS="-e DEBUG=true -e TEST_RUN=true"
           curl -sSL https://raw.githubusercontent.com/hydazz/scripts/main/docker/docker-ci.sh | bash
+
       - name: Build And Push The Docker Image
         run: |
           docker buildx build \
@@ -96,19 +110,23 @@ jobs:
             --tag vcxpz/apk-packager:latest \
             --tag vcxpz/apk-packager:3.13 \
             --file Dockerfile .
+
       - name: Get New Package Versions From Image
         run: |
           docker run --rm --entrypoint /bin/sh -v ${PWD}:/tmp vcxpz/ci-build:ci-build -c '\
             apk info -v | sort >/tmp/package_versions.txt'
+
       - name: Update README
         run: |
           export APP_VERSION=$(curl -sX GET "https://api.github.com/repos/hydazz/docker-apk-packager/releases/latest" | jq -r .tag_name)
           chmod +x .github/update_readme.sh && .github/update_readme.sh
+
       - name: Commit And Push Changes To Github
         run: |
           git add -A
           git commit -m "Bot Updating Files" || echo "No Changes"
           git push || echo "No Changes"
+
       - name: Sync README With Docker Hub
         uses: peter-evans/dockerhub-description@v2
         with:
@@ -116,7 +134,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: vcxpz/apk-packager
 
-  alpine-3_12:
+  3-12:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -124,32 +142,39 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         id: buildx
+
       - name: Docker Login
         uses: docker/login-action@v1
         with:
           username: vcxpz
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Github Login
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+
       - name: Build The Docker Image For Testing
         run: |
           docker build \
             --tag vcxpz/ci-build:ci-build \
             --build-arg TAG=3.12 \
             --file Dockerfile .
+
       - name: Test The Docker Image
         run: |
           export IMAGE="vcxpz/ci-build:ci-build"
           export TEST_SEARCH="\[services.d\] done."
           export RUN_ARGS="-e DEBUG=true -e TEST_RUN=true"
           curl -sSL https://raw.githubusercontent.com/hydazz/scripts/main/docker/docker-ci.sh | bash
+
       - name: Build And Push The Docker Image
         run: |
           docker buildx build \
@@ -159,3 +184,4 @@ jobs:
             --build-arg BUILD_DATE="$(date +%Y-%m-%d)" \
             --tag vcxpz/apk-packager:3.12 \
             --file Dockerfile .
+

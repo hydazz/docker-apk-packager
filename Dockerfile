@@ -1,5 +1,5 @@
 ARG TAG
-FROM alpine:$TAG
+FROM alpine:${TAG}
 
 ENV TERM="xterm"
 
