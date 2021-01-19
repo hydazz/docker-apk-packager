@@ -17,6 +17,7 @@ nc='\033[0m'       # echo No Colour
 helpFunction() {
 	echo ""
 	echo "Usage: $0 -a <arch> -k <key> -i <input> -o <output>"
+	echo -e "\t-v ersion: Alpine version to use"
 	echo -e "\t-a rchitecture: Build architecture"
 	echo -e "\t-k ey: Full path to your private signing key"
 	echo -e "\t-i nput: Path to the directory containing the APKBUILD file"
@@ -25,8 +26,9 @@ helpFunction() {
 	exit 1
 }
 
-while getopts "a:k:i:o:t" opt; do
+while getopts ":v:a:k:i:o:t" opt; do
 	case "${opt}" in
+	v) VERSION="${OPTARG}" ;;
 	a) ARCH="${OPTARG}" ;;
 	k) KEY="${OPTARG}" ;;
 	i) INPUT="${OPTARG}" ;;
@@ -35,7 +37,7 @@ while getopts "a:k:i:o:t" opt; do
 	?) helpFunction ;;
 	esac
 done
-
+VERSION=${VERSION:-latest}
 # print helpFunction in case parameters are empty
 if [ -z "${ARCH}" ] || [ -z "${INPUT}" ] || [ -z "${OUTPUT}" ]; then
 	echo "Some or all of the parameters are empty"
@@ -56,6 +58,14 @@ if [ "${ARCH}" = "amd64" ] || [ "${ARCH}" = "arm/v6" ] || [ "${ARCH}" = "arm/v7"
 else
 	echo -e "${red}Error: ${ARCH} is not a supported architecture${nc}"
 	echo -e "${bold}Supported architectures: amd64, arm/v6, arm/v7, arm64, 386, ppc64le, s390x${nc}"
+	exit 1
+fi
+
+if [ "${VERSION}" = "latest" ] || [ "${VERSION}" = "edge" ] || [ "${VERSION}" = "3.13" ] || [ "${VERSION}" = "3.12" ]; then
+	:
+else
+	echo -e "${red}Error: ${VERSION} is not a supported version${nc}"
+	echo -e "${bold}Supported versions: edge, 3.13, 3.12${nc}"
 	exit 1
 fi
 
@@ -137,7 +147,7 @@ output=$(
 # set architecture
 # not my best work, i have no idea how to use jq
 # ~~~~~~~~~~~~~~~~~~~~~~~
-MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager --raw) # 'cache' manifest
+MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager:${VERSION} --raw) # 'cache' manifest
 
 [[ ${ARCH} = "amd64" ]] &&
 	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[0] .digest' | sed 's/"//g')"
@@ -172,7 +182,7 @@ function build() {
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
-# finally build :)
+# finally build
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 if build; then

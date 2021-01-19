@@ -76,16 +76,14 @@ apk update -q
 
 # run checksum
 if ! su abc -c "abuild checksum"; then
-	code=$?
-	echo -e "${red}Error: command \"abuild checksum\" failed with error code: $code, see above for possible errors${nc}"
-	exit $code
+	echo -e "${red}Error: command \"abuild checksum\" failed, see above for possible errors${nc}"
+	exit 1
 fi
 
 # run build
 if ! su abc -c "abuild -r"; then
-	code=$?
-	echo -e "${red}Error: command \"abuild -r\" failed with error code: $code, see above for possible errors${nc}"
-	exit $code
+	echo -e "${red}Error: command \"abuild -r\" failed, see above for possible errors${nc}"
+	exit 1
 fi
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
