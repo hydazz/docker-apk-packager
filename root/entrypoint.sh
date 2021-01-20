@@ -22,7 +22,11 @@ mkdir -p \
 [[ -n "${testing}" ]] &&
 	echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~
 # find and set key
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
 key=$(find /config -name "*.rsa")
 if [ ! "$(echo "${key}" | wc -l)" = "1" ]; then
 	echo -e "${red}Error: Multiple signing keys have been found${nc}"
@@ -48,9 +52,13 @@ if [ -z "${key}" ]; then
 	echo -e "${blue}Your new public and private signing keys are in the output directory${nc}"
 	key=/out/key.rsa
 fi
+
 echo "PACKAGER_PRIVKEY=\"${key}\"" >/config/.abuild/abuild.conf
 
+# ~~~~~~~~~~~~~~~~~~~~~~~
 # find and set package location
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
 apkbuild=$(find /config -name "APKBUILD" | sed s/APKBUILD//g)
 if [ ! "$(echo "${apkbuild}" | wc -l)" = "1" ]; then
 	echo -e "${red}Error: Multiple APKBUILD files have been found${nc}"
