@@ -22,7 +22,6 @@ mkdir -p \
 [[ -n "${testing}" ]] &&
 	echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >>/etc/apk/repositories
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # find and set key
 # ~~~~~~~~~~~~~~~~~~~~~~~

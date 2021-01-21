@@ -16,13 +16,13 @@ nc='\033[0m'       # echo No Colour
 
 helpFunction() {
 	echo ""
-	echo "Usage: $0 -a <arch> -k <key> -i <input> -o <output>"
+	echo -e "${bold}Usage: $0 -a <arch> -k <key> -i <input> -o <output>"
 	echo -e "\t-v ersion: Alpine version to use"
 	echo -e "\t-a rchitecture: Build architecture"
 	echo -e "\t-k ey: Full path to your private signing key"
 	echo -e "\t-i nput: Path to the directory containing the APKBUILD file"
 	echo -e "\t-o utput: Path to the output directory"
-	echo -e "\t-t esting: Add the testing repository"
+	echo -e "\t-t esting: Add the testing repository${nc}"
 	exit 1
 }
 
@@ -40,7 +40,7 @@ done
 VERSION=${VERSION:-latest}
 # print helpFunction in case parameters are empty
 if [ -z "${ARCH}" ] || [ -z "${INPUT}" ] || [ -z "${OUTPUT}" ]; then
-	echo "Some or all of the parameters are empty"
+	echo -e "${red}Some or all of the parameters are empty${nc}"
 	helpFunction
 fi
 
@@ -80,6 +80,7 @@ folder_name=$(basename "${apkbuild_dir}")
 if [ -n "${KEY}" ]; then
 	if [ ! -f "${KEY}" ]; then
 		echo -e "${red}Error: ${KEY} is not a valid file${nc}"
+		exit 1
 	else
 		buildkey="-v ${KEY}:/config/${key_name}"
 	fi
@@ -187,13 +188,11 @@ function build() {
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 if build; then
-	code=$?
 	echo ""
 	echo -e "${green}Build was successful! files have been saved to ${output}/apk-packager${nc}"
-	exit $code
+	exit 0
 else
-	code=$?
 	echo ""
-	echo -e "${red}Build failed! check the log above for possible errors${nc}"
-	exit $code
+	echo -e "${red}Build failed! check above for possible errors${nc}"
+	exit 1
 fi
