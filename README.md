@@ -39,12 +39,10 @@ If the build was successful you should see `Build successful!` in the terminal. 
 
 I have not incorporated an easy way to do this in the scripts but running the commands separately doesn't hurt, here's an example to build for all supported architectures.
 
-```bash
-#!/bin/bash
-for arch in amd64 arm/v6 arm/v7 arm64 i386 ppc64le s390x; do
-	./build.sh -a $arch -k <key> -i <input> -o <output>
-done
-```
+    #!/bin/bash
+    for arch in amd64 arm/v6 arm/v7 arm64 i386 ppc64le s390x; do
+    	./build.sh -a $arch -k <key> -i <input> -o <output>
+    done
 
 This will create the `apk-packager` folder in the `/home/alex` directory. Depending on what architectures you used the folder should have seperate subfolders for each architecture.
 
@@ -88,9 +86,7 @@ I have not tested building on another architecture other that x64. I do not see 
 
 MacOS only requires docker desktop and jq to be installed for everything to work smoothly. Docker desktop can downloaded from the docker [website](https://www.docker.com/products/docker-desktop). jq can be installed via brew:
 
-```bash
-brew install jq
-```
+    brew install jq
 
 ### Windows
 
@@ -102,31 +98,23 @@ Docker desktop can downloaded from the docker [website](https://www.docker.com/p
 Ubuntu/Debian doesn't have docker desktop so setup is a little more diffcult, qemu-user-static, jq, docker and docker buildx have to be installed.
 **Installing docker:**
 
-```bash
-curl -fsSL https://get.docker.com -o get-docker.sh
-```
+    curl -fsSL https://get.docker.com -o get-docker.sh
 
 **Installing docker buildx:**
 
 Download the latest binary release from <https://github.com/docker/buildx/releases/latest> and copy it to `~/.docker/cli-plugins` folder with name `docker-buildx`.
 
-```bash
-chmod a+x ~/.docker/cli-plugins/docker-buildx
-```
+    chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 verify docker buildx installation by running
 
-```bash
-docker buildx ls
-```
+    docker buildx ls
 
 see [here](https://github.com/docker/buildx/#installing) for more installation help
 
 **installing jq and qemu-user-static:**
 
-```bash
-apt-get install jq qemu-user-static
-```
+    apt-get install jq qemu-user-static
 
 ### Verify you can run other architectures on your system
 
