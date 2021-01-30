@@ -92,10 +92,10 @@ jobs:
       - name: Commit And Push Changes To Github
         run: |
           git add -A
-          git commit -m "Bot Updating Files" || echo "No Changes"
-          git push || echo "No Changes"
+          git commit -m "Bot Updating Files" || true
+          git push || true
 
-      - name: Sync README With Docker Hub
+      - name: Sync README.md With Docker Hub
         uses: peter-evans/dockerhub-description@v2
         with:
           username: vcxpz
