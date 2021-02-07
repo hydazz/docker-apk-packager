@@ -46,26 +46,22 @@ fi
 
 if [ "${TESTING}" = "true" ]; then
 	echo -e "${blue}Testing repository enabled${nc}"
-	testing="-e testing=true"
+	args="-e testing=true"
 fi
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # validate supplied parameters
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
-if [ "${ARCH}" = "amd64" ] || [ "${ARCH}" = "arm/v6" ] || [ "${ARCH}" = "arm/v7" ] || [ "${ARCH}" = "arm64" ] || [ "${ARCH}" = "386" ] || [ "${ARCH}" = "ppc64le" ] || [ "${ARCH}" = "s390x" ]; then
-	:
-else
+if ! { [ "${ARCH}" = "amd64" ] || [ "${ARCH}" = "arm/v6" ] || [ "${ARCH}" = "arm/v7" ] || [ "${ARCH}" = "arm64" ] || [ "${ARCH}" = "386" ] || [ "${ARCH}" = "ppc64le" ] || [ "${ARCH}" = "s390x" ]; }; then
 	echo -e "${red}Error: ${ARCH} is not a supported architecture${nc}"
-	echo -e "${bold}Supported architectures: amd64, arm/v6, arm/v7, arm64, 386, ppc64le, s390x${nc}"
+	echo -e "${bold}Supported architectures: amd64, arm/v6, arm/v7, arm64, 386, ppc64le and s390x${nc}"
 	exit 1
 fi
 
-if [ "${VERSION}" = "latest" ] || [ "${VERSION}" = "edge" ] || [ "${VERSION}" = "3.13" ] || [ "${VERSION}" = "3.12" ]; then
-	:
-else
+if ! { [ "${VERSION}" = "latest" ] || [ "${VERSION}" = "edge" ] || [ "${VERSION}" = "3.13" ] || [ "${VERSION}" = "3.12" ]; }; then
 	echo -e "${red}Error: ${VERSION} is not a supported version${nc}"
-	echo -e "${bold}Supported versions: edge, 3.13, 3.12${nc}"
+	echo -e "${bold}Supported versions: edge, 3.13 and 3.12${nc}"
 	exit 1
 fi
 
@@ -82,7 +78,7 @@ if [ -n "${KEY}" ]; then
 		echo -e "${red}Error: ${KEY} is not a valid file${nc}"
 		exit 1
 	else
-		buildkey="-v ${KEY}:/config/${key_name}"
+		args="${args} -v ${KEY}:/config/${key_name}"
 	fi
 else
 	echo -e "${blue}No private key supplied, a new signing key pair will be generated in ${OUTPUT} for you to use${nc}"
@@ -127,7 +123,8 @@ if ! docker info >/dev/null 2>&1; then
 fi
 
 if ! echo "$ls" | grep -o "linux/${ARCH}" | sed -n 1p | grep -q "linux/${ARCH}"; then
-	echo -e "${red}Error: Your system does not support ${ARCH} emulation${nc}"
+	echo -e "${red}Error: Your system does not support ${ARCH} emulation!"
+	echo -e "It is possible a dependency is not installed, see ${bold}https://github.com/hydazz/docker-apk-packager#setting-enviroment--dependencies-${nc}"
 	exit 1
 fi
 
@@ -145,6 +142,22 @@ output=$(
 )
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
+# set build function
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
+function build() {
+	clear
+	echo -e "${blue}Packaging... This may take a long time (${ARCH})${nc}"
+	echo ""
+	# shellcheck disable=SC2086
+	docker run -it --rm \
+		-v "${apkbuild_dir}":/config/"${folder_name}" \
+		-v "${output}":/out \
+		${args} \
+		"${repo}"
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~
 # set architecture
 # not my best work, i have no idea how to use jq
 # ~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,36 +165,21 @@ output=$(
 MANIFEST=$(docker buildx imagetools inspect vcxpz/apk-packager:"${VERSION}" --raw) # 'cache' manifest
 
 [[ ${ARCH} = "amd64" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[0] .digest' | sed 's/"//g')"
+	select="0"
 [[ ${ARCH} = "arm/v6" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[1] .digest' | sed 's/"//g')"
+	select="1"
 [[ ${ARCH} = "arm/v7" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[2] .digest' | sed 's/"//g')"
+	select="2"
 [[ ${ARCH} = "arm64" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[3] .digest' | sed 's/"//g')"
+	select="3"
 [[ ${ARCH} = "386" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[4] .digest' | sed 's/"//g')"
+	select="4"
 [[ ${ARCH} = "ppc64le" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[5] .digest' | sed 's/"//g')"
+	select="5"
 [[ ${ARCH} = "s390x" ]] &&
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests[6] .digest' | sed 's/"//g')"
+	select="6"
 
-# ~~~~~~~~~~~~~~~~~~~~~~~
-# set build function
-# ~~~~~~~~~~~~~~~~~~~~~~~
-
-function build() {
-	clear
-	echo -e "${blue}Packaging... This may take a long time${nc}"
-	echo ""
-	# shellcheck disable=SC2086
-	docker run -it --rm \
-		${buildkey} \
-		-v "${apkbuild_dir}":/config/"${folder_name}" \
-		-v "${output}":/out \
-		${testing} \
-		"${repo}"
-}
+repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests['${select}'] .digest' | sed 's/"//g')"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # finally build
@@ -189,10 +187,10 @@ function build() {
 
 if build; then
 	echo ""
-	echo -e "${green}Build was successful! files have been saved to ${output}/apk-packager${nc}"
+	echo -e "${green}Yipee! your package built successfully, files have been saved to ${output}/apk-packager${nc}"
 	exit 0
 else
 	echo ""
-	echo -e "${red}Build failed! check above for possible errors${nc}"
+	echo -e "${red}Uh-oh! something went wrong building your package, check above for possible errors${nc}"
 	exit 1
 fi
