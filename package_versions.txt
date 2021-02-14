@@ -8,7 +8,7 @@ bash-5.1.0-r0
 binutils-2.35.1-r1
 brotli-libs-1.0.9-r3
 build-base-0.5-r2
-busybox-1.32.1-r2
+busybox-1.32.1-r3
 ca-certificates-20191127-r5
 ca-certificates-bundle-20191127-r5
 curl-7.74.0-r0
@@ -18,7 +18,7 @@ file-5.39-r0
 fortify-headers-1.1-r0
 g++-10.2.1_pre1-r3
 gcc-10.2.1_pre1-r3
-git-2.30.0-r0
+git-2.30.1-r0
 gmp-6.2.1-r0
 isl22-0.22-r0
 libacl-2.2.53-r0
@@ -51,7 +51,7 @@ pcre2-10.36-r0
 pkgconf-1.7.3-r0
 readline-8.1.0-r0
 scanelf-1.2.8-r0
-ssl_client-1.32.1-r2
+ssl_client-1.32.1-r3
 sudo-1.9.5p2-r0
 tar-1.33-r1
 zlib-1.2.11-r3
