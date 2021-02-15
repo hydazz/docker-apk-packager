@@ -85,8 +85,14 @@ fi
 # build stage
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
+# cleanup failed build attempts
+rm -rf "${apkbuild}"/src &>/dev/null
+
+# copy files to different location to prepair for build
+cp "${apkbuild}"/* /tmp/
+
 # cd to package directory
-if ! cd "${apkbuild}"; then
+if ! cd tmp/"${apkbuild}"; then
 	echo -e "${red}>>> ERROR: ${bold}Could not cd to ${apkbuild}${nc}"
 	exit 1
 fi

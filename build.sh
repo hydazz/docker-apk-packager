@@ -38,8 +38,17 @@ while getopts ":v:a:k:i:o:t" opt; do
 	esac
 done
 
-VERSION=${VERSION:-latest}
-ARCH=${ARCH:-os}
+clear
+
+if [ -z "${VERSION}" ]; then
+	echo -e "${green}>>> ${bold}Defaulting version to latest"
+	VERSION="latest"
+fi
+
+if [ -z "${ARCH}" ]; then
+	echo -e "${green}>>> ${bold}Defaulting architecture to $(arch)"
+	ARCH="os"
+fi
 
 # print helpFunction in case parameters are empty
 if [ -z "${ARCH}" ] || [ -z "${INPUT}" ] || [ -z "${OUTPUT}" ]; then
@@ -108,19 +117,24 @@ if ! command -v jq &>/dev/null; then
 	jq="false"
 fi
 
-# buildx is not required when docker decideds architecture
-if [ ! ${ARCH} = "os" ]; then
-	ls=$(docker buildx ls) || buildx=false
-fi
+ls=$(docker buildx ls) || buildx="false"
 
-if [ "${docker}" = "false" ] || [ "${jq}" = "false" ] || [ "${buildx}" = "false" ]; then
-	[[ "${docker}" = "false" ]] &&
-		echo -e "${red}>>> ERROR: ${bold}docker is not installed${nc}"
+# jq and buildx are not required when docker decideds architecture
+if [ ! ${ARCH} = "os" ]; then
+	if [ "${docker}" = "false" ] || [ "${jq}" = "false" ] || [ "${buildx}" = "false" ]; then
+		[[ "${docker}" = "false" ]] &&
+			echo -e "${red}>>> ERROR: ${bold}Docker is not installed${nc}"
+		[[ "${buildx}" = "false" ]] &&
+			echo -e "${red}>>> ERROR: ${bold}Docker buildx is not installed${nc}"
+		[[ "${jq}" = "false" ]] &&
+			echo -e "${red}>>> ERROR: ${bold}jq is not installed${nc}"
+		exit 1
+	fi
+elif [ "${jq}" = "false" ] || [ "${buildx}" = "false" ]; then
 	[[ "${buildx}" = "false" ]] &&
-		echo -e "${red}>>> ERROR: ${bold}docker buildx is not installed${nc}"
+		echo -e "${green}>>> ${bold}Docker buildx is not installed, but is not needed${nc}"
 	[[ "${jq}" = "false" ]] &&
-		echo -e "${red}>>> ERROR: ${bold}jq is not installed${nc}"
-	exit 1
+		echo -e "${green}>>> ${bold}jq is not installed, but is not needed${nc}"
 fi
 
 if ! docker info >/dev/null 2>&1; then
@@ -130,8 +144,8 @@ fi
 
 if [ ! ${ARCH} = "os" ]; then
 	if ! echo "$ls" | grep -o "linux/${ARCH}" | sed -n 1p | grep -q "linux/${ARCH}"; then
-		echo -e "${red}>>> ERROR: ${bold}Your system does not support ${ARCH} emulation!"
-		echo -e "It is possible a qemu is not installed, see ${bold}https://github.com/hydazz/docker-apk-packager#setting-environment--dependencies-${nc}"
+		echo -e "${red}>>> ERROR: ${bold}Your system does not support ${ARCH} emulation"
+		echo -e "It is possible a qemu is not installed, see ${bold}https://github.com/hydazz/docker-apk-packager#configure-multi-arch-support${nc}"
 		exit 1
 	fi
 fi
@@ -145,14 +159,11 @@ fi
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 function build() {
-	clear
-
-	# hide 'Unable to find image locally'
-	echo -e "${green}>>> ${bold}Pulling vcxpz/apk-packager:${VERSION} (${ARCH})"
-	docker pull "${repo}" &>/dev/null
+	echo ""
+	echo -e "${green}>>> ${bold}Pulling vcxpz/apk-packager:${VERSION} (${ARCH})${nc}"
+	docker pull "${repo}"
 
 	echo -e "${green}>>> ${bold}Packaging... This may take a long time${nc}"
-	echo ""
 	# shellcheck disable=SC2086
 	docker run -it --rm \
 		-v "${apkbuild_dir}":/config/"${folder_name}" \
@@ -184,7 +195,7 @@ if [ ! ${ARCH} = "os" ]; then
 	[[ ${ARCH} = "s390x" ]] &&
 		select="6"
 
-	repo="docker.io/vcxpz/apk-packager:latest@$(echo "${MANIFEST}" | jq '.manifests['${select}'] .digest' | sed 's/"//g')"
+	repo="docker.io/vcxpz/apk-packager:${VERSION}@$(echo "${MANIFEST}" | jq '.manifests['${select}'] .digest' | sed 's/"//g')"
 else
 	repo="vcxpz/apk-packager:${VERSION}"
 	ARCH=$(arch)
@@ -196,10 +207,10 @@ fi
 
 if build; then
 	echo ""
-	echo -e "${green}>>> ${bold}Yipee! your package built successfully, files have been saved to ${OUTPUT}/apk-packager${nc}"
+	echo -e "${green}>>> ${bold}Yipee! Your package built successfully, files have been saved to ${OUTPUT}/apk-packager${nc}"
 	exit 0
 else
 	echo ""
-	echo -e "${red}>>> ERROR: ${bold}Uh-oh! something went wrong building your package, check above for possible errors${nc}"
+	echo -e "${red}>>> ERROR: ${bold}Uh-oh! Something went wrong building your package, check above for possible errors${nc}"
 	exit 1
 fi
