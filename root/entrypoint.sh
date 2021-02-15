@@ -28,7 +28,9 @@ fi
 # create directories
 mkdir -p \
 	/var/cache/distfiles \
-	/config/.abuild
+	/config/.abuild \
+	/config/abuild \
+	/config/packages/config
 
 # add testing repo if enabled by user
 [[ -n "${testing}" ]] &&
@@ -86,22 +88,26 @@ fi
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # cleanup failed build attempts
-rm -rf "${apkbuild}"/src &>/dev/null
+[[ -d "${apkbuild}"/src ]] &&
+	rm -rf "${apkbuild}"/src
+[[ -d "${apkbuild}"/pkg ]] &&
+	rm -rf "${apkbuild}"/pkg
 
 # copy files to different location to prepair for build
-cp "${apkbuild}"/* /tmp/
+cp -r "${apkbuild}"/* /config/abuild
 
 # cd to package directory
-if ! cd tmp/"${apkbuild}"; then
-	echo -e "${red}>>> ERROR: ${bold}Could not cd to ${apkbuild}${nc}"
-	exit 1
-fi
+cd /config/abuild
 
 apk update -q
 
+# fix permissions
+chown -R abc:abc \
+	/config/abuild \
+	/config/packages
+
 # run checksum
 if ! su abc -c "abuild checksum"; then
-	echo -e "${red}>>> ERROR: ${bold}checksum failed, see above for possible errors${nc}"
 	exit 1
 fi
 
