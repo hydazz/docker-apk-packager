@@ -60,16 +60,16 @@ This will create the `apk-packager` folder in the `/home/alex` directory. Depend
 
 This is a big no-no, the `APKINDEX.tar.gz` file will be overwritten, and everything will just become a mess. To get past this hurdle extract the `APKINDEX.tar.gz` archive, there will be an APKINDEX text file within the archive. Move this file somewhere safe and delete the `APKINDEX.tar.gz` archive from the directory. Then you can run the build command. Once the build command is done, follow these steps:
 
-- Extract the newer `APKINDEX.tar.gz` (make sure its the new one, the only one should be deleted but whatever)
-- Open the newer `APKINDEX` file that was extracted from the newer `APKINDEX.tar.gz`
-- Copy the contents of the old `APKINDEX` file and paste them at the bottom of the new one. make sure there is one space between the packages
+-   Extract the newer `APKINDEX.tar.gz` (make sure its the new one, the only one should be deleted but whatever)
+-   Open the newer `APKINDEX` file that was extracted from the newer `APKINDEX.tar.gz`
+-   Copy the contents of the old `APKINDEX` file and paste them at the bottom of the new one. make sure there is one space between the packages
 
 **Below is ran within an Alpine container.**
 
-- On a fresh Alpine Docker container mount the `apk-packager` folder within the container and run `apk add alpine-sdk`
-- `cd` to the folder containing the modified `APKINDEX` file
-- run `tar -c APKINDEX | abuild-tar --cut | gzip -9 >APKINDEX.tar.gz` to make a `APKINDEX.tar.gz` archive from the file
-- Run `abuild-sign -k /path/to/private_key.rsa APKINDEX.tar.gz` to sign the index
+-   On a fresh Alpine Docker container mount the `apk-packager` folder within the container and run `apk add alpine-sdk`
+-   `cd` to the folder containing the modified `APKINDEX` file
+-   run `tar -c APKINDEX | abuild-tar --cut | gzip -9 >APKINDEX.tar.gz` to make a `APKINDEX.tar.gz` archive from the file
+-   Run `abuild-sign -k /path/to/private_key.rsa APKINDEX.tar.gz` to sign the index
 
 Follow these steps for every package and architecture; it does get tedious.
 

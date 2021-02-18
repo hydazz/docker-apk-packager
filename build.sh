@@ -5,7 +5,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 red='\033[1;31m'   # red
-blue='\033[1;34m'  # blue
 green='\033[1;32m' # Green
 bold='\033[1;37m'  # white bold
 nc='\033[0m'       # no colour
