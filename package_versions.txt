@@ -26,13 +26,13 @@ libatomic-10.2.1_pre1-r3
 libattr-2.4.48-r0
 libc-dev-0.7.2-r3
 libc-utils-0.7.2-r3
-libcrypto1.1-1.1.1i-r0
+libcrypto1.1-1.1.1j-r0
 libcurl-7.74.0-r0
 libgcc-10.2.1_pre1-r3
 libgomp-10.2.1_pre1-r3
 libgphobos-10.2.1_pre1-r3
 libmagic-5.39-r0
-libssl1.1-1.1.1i-r0
+libssl1.1-1.1.1j-r0
 libstdc++-10.2.1_pre1-r3
 libtls-standalone-2.9.1-r1
 lzip-1.21-r0
@@ -45,7 +45,7 @@ musl-utils-1.2.2-r0
 ncurses-libs-6.2_p20210109-r0
 ncurses-terminfo-base-6.2_p20210109-r0
 nghttp2-libs-1.42.0-r1
-openssl-1.1.1i-r0
+openssl-1.1.1j-r0
 patch-2.7.6-r6
 pcre2-10.36-r0
 pkgconf-1.7.3-r0
