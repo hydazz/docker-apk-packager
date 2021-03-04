@@ -166,14 +166,14 @@ Run `docker buildx ls`, this will give you a list of architectures your system c
 
 ## Supported Architectures / Alpine Versions
 
-Currently, all architectures are supported on Alpine edge, 3.13 and 3.12, feel free to open an issue if you need a specific Alpine version.
+Currently, all architectures are supported on Alpine 3.13 and 3.12, feel free to open an issue if you need a specific Alpine version.
 
 | Platform       | Alpine Versions | `-a` Input | Name of output folder |
 | -------------- | --------------- | ---------- | --------------------- |
-| linux/amd64    | edge, 3.13 3,12 | `amd64`    | `x86_64`              |
-| linux/arm/v6   | edge, 3.13 3,12 | `arm/v6`   | `armhf`               |
-| linux/arm/v7   | edge, 3.13 3,12 | `arm/v7`   | `armv7`               |
-| linux/arm64/v8 | edge, 3.13 3,12 | `arm64`    | `aarch64`             |
-| linux/386      | edge, 3.13 3,12 | `386`      | `x86`                 |
-| linux/ppc64le  | edge, 3.13 3,12 | `ppc64le`  | `ppc64le`             |
-| linux/s390x    | edge, 3.13 3,12 | `s390x`    | `s390x`               |
+| linux/amd64    | 3.13 3,12       | `amd64`    | `x86_64`              |
+| linux/arm/v6   | 3.13 3,12       | `arm/v6`   | `armhf`               |
+| linux/arm/v7   | 3.13 3,12       | `arm/v7`   | `armv7`               |
+| linux/arm64/v8 | 3.13 3,12       | `arm64`    | `aarch64`             |
+| linux/386      | 3.13 3,12       | `386`      | `x86`                 |
+| linux/ppc64le  | 3.13 3,12       | `ppc64le`  | `ppc64le`             |
+| linux/s390x    | 3.13 3,12       | `s390x`    | `s390x`               |
