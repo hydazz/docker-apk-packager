@@ -5,7 +5,7 @@ ENV TERM="xterm"
 
 RUN \
 	echo "**** install runtime packages ****" && \
-	apk add --no-cache --upgrade \
+	apk add --no-cache \
 		alpine-sdk \
 		bash \
 		sudo && \
