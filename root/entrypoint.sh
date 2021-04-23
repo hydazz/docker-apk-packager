@@ -96,7 +96,7 @@ fi
 cp -r "${apkbuild}"/* /config/abuild
 
 # cd to package directory
-cd /config/abuild
+cd /config/abuild || exit 1
 
 apk update -q
 
