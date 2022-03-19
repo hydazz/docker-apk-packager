@@ -96,20 +96,10 @@ fi
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # validate supplied folder/file locations
-# should probably add something to check for basename and dirname
 # ~~~~~~~~~~~~~~~~~~~~~~~
-
-# get absolute paths
-function realpath {
-	echo "$(
-		cd "$(dirname "$1")" || exit
-		pwd
-	)"/"$(basename "$1")"
-}
 
 if [ -n "${KEY}" ]; then
 	if [ -f "${KEY}" ]; then
-		KEY=$(realpath $KEY)
 		args="${args} -v ${KEY}:/config/key.rsa"
 	else
 		echo_error "${KEY} is not a valid file"
@@ -119,14 +109,12 @@ else
 	echo_notice "No private key supplied, a new signing key pair will be generated in ${OUTPUT}/apk-packager/keys for you to use"
 fi
 if [ -d "${INPUT}" ]; then
-	INPUT=$(realpath ${INPUT//APKBUILD/})
+	INPUT=${INPUT//APKBUILD/}
 else
 	echo_error "${INPUT} is not a valid folder"
 	exit 1
 fi
-if [ -d "${OUTPUT}" ]; then
-	OUTPUT=$(realpath $OUTPUT)
-else
+if [ ! -d "${OUTPUT}" ]; then
 	echo_error "${OUTPUT} is not a valid folder"
 	exit 1
 fi
