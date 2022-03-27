@@ -32,7 +32,7 @@ libgcc-10.3.1_git20211027-r0
 libgomp-10.3.1_git20211027-r0
 libgphobos-10.3.1_git20211027-r0
 libmagic-5.41-r0
-libretls-3.3.4-r2
+libretls-3.3.4-r3
 libssl1.1-1.1.1n-r0
 libstdc++-10.3.1_git20211027-r0
 lzip-1.22-r1
