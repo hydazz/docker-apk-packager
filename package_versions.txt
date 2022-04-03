@@ -54,4 +54,4 @@ scanelf-1.3.3-r0
 ssl_client-1.34.1-r4
 sudo-1.9.8_p2-r1
 tar-1.34-r0
-zlib-1.2.11-r3
+zlib-1.2.12-r0
