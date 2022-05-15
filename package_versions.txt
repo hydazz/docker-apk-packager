@@ -45,7 +45,7 @@ musl-utils-1.2.2-r7
 ncurses-libs-6.3_p20211120-r0
 ncurses-terminfo-base-6.3_p20211120-r0
 nghttp2-libs-1.46.0-r0
-openssl-1.1.1n-r0
+openssl-1.1.1o-r0
 patch-2.7.6-r7
 pcre2-10.39-r0
 pkgconf-1.8.0-r0
