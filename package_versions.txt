@@ -18,7 +18,7 @@ file-5.41-r0
 fortify-headers-1.1-r1
 g++-10.3.1_git20211027-r0
 gcc-10.3.1_git20211027-r0
-git-2.34.2-r0
+git-2.34.4-r0
 gmp-6.2.1-r1
 isl22-0.22-r0
 libacl-2.2.53-r0
@@ -42,8 +42,8 @@ mpfr4-4.1.0-r0
 musl-1.2.2-r7
 musl-dev-1.2.2-r7
 musl-utils-1.2.2-r7
-ncurses-libs-6.3_p20211120-r0
-ncurses-terminfo-base-6.3_p20211120-r0
+ncurses-libs-6.3_p20211120-r1
+ncurses-terminfo-base-6.3_p20211120-r1
 nghttp2-libs-1.46.0-r0
 openssl-1.1.1q-r0
 patch-2.7.6-r7
