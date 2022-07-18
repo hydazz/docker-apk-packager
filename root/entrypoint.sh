@@ -70,7 +70,6 @@ echo "PACKAGER_PRIVKEY=\"${key}\"" >/config/.abuild/abuild.conf
 # find and set package location
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
-
 if [ ! -f /config/apk-build/APKBUILD ]; then
 	echo_error "Could not locate a APKBUILD file at /config/apk-build/APKBUILD"
 	exit 1
