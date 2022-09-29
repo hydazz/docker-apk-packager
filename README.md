@@ -1,8 +1,6 @@
 ## docker-apk-packager
 
-**moved to https://hub.docker.com/u/hydaz**
-
-[![docker hub](https://img.shields.io/badge/docker_hub-link-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/vcxpz/apk-packager) ![docker image size](https://img.shields.io/docker/image-size/vcxpz/apk-packager?style=for-the-badge&logo=docker) [![auto build](https://img.shields.io/badge/docker_builds-automated-blue?style=for-the-badge&logo=docker?color=d1aa67)](https://github.com/hydazz/docker-apk-packager/actions?query=workflow%3A"Auto+Builder+CI")
+[![docker hub](https://img.shields.io/badge/docker_hub-link-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/hydaz/apk-packager) ![docker image size](https://img.shields.io/docker/image-size/hydaz/apk-packager?style=for-the-badge&logo=docker) [![auto build](https://img.shields.io/badge/docker_builds-automated-blue?style=for-the-badge&logo=docker?color=d1aa67)](https://github.com/hydazz/docker-apk-packager/actions?query=workflow%3A"Auto+Builder+CI")
 
 apk-packager is a Docker image with an accompanying script to automate building and packaging apk packages via abuild for any architecture from any architecture.
 
@@ -29,7 +27,7 @@ Run the script **(example, see below)**.
 The docker container can also be ran standalone, without the script
 
 ```bash
- docker run -it --rm -v <input>:/config/apk-build -v <output>:/out -e testing=true vcxpz/apk-packager
+ docker run -it --rm -v <input>:/config/apk-build -v <output>:/out -e testing=true hydaz/apk-packager
 ```
 
 `<input>` is the directory the APKBUILD file resides in, not the APKBUILD file

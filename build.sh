@@ -173,7 +173,7 @@ fi
 
 function build() {
 	echo ""
-	echo_notice "Pulling vcxpz/apk-packager:${VERSION} (${ARCH})"
+	echo_notice "Pulling hydaz/apk-packager:${VERSION} (${ARCH})"
 	docker pull "${repo}"
 
 	echo_notice "Packaging... This may take a long time"
@@ -191,7 +191,7 @@ function build() {
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 if [ ! ${ARCH} = "os" ]; then
-	MANIFEST="$(docker buildx imagetools inspect vcxpz/apk-packager:${VERSION} --raw)" # 'cache' manifest
+	MANIFEST="$(docker buildx imagetools inspect hydaz/apk-packager:${VERSION} --raw)" # 'cache' manifest
 
 	if [[ ${ARCH} = "amd64" ]]; then
 		select="0"
@@ -209,9 +209,9 @@ if [ ! ${ARCH} = "os" ]; then
 		select="6"
 	fi
 
-	repo="docker.io/vcxpz/apk-packager:${VERSION}@$(echo "${MANIFEST}" | jq '.manifests['${select}'] .digest' | sed 's/"//g')"
+	repo="docker.io/hydaz/apk-packager:${VERSION}@$(echo "${MANIFEST}" | jq '.manifests['${select}'] .digest' | sed 's/"//g')"
 else
-	repo="vcxpz/apk-packager:${VERSION}"
+	repo="hydaz/apk-packager:${VERSION}"
 	ARCH=$(arch)
 fi
 
