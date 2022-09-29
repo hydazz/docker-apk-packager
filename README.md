@@ -1,5 +1,7 @@
 ## docker-apk-packager
 
+**moved to https://hub.docker.com/u/hydaz**
+
 [![docker hub](https://img.shields.io/badge/docker_hub-link-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/vcxpz/apk-packager) ![docker image size](https://img.shields.io/docker/image-size/vcxpz/apk-packager?style=for-the-badge&logo=docker) [![auto build](https://img.shields.io/badge/docker_builds-automated-blue?style=for-the-badge&logo=docker?color=d1aa67)](https://github.com/hydazz/docker-apk-packager/actions?query=workflow%3A"Auto+Builder+CI")
 
 apk-packager is a Docker image with an accompanying script to automate building and packaging apk packages via abuild for any architecture from any architecture.
