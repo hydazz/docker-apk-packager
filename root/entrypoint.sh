@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "This image will no longer receive updates, please update to hydaz/apk-packager!"
+
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # set colours and echo templates
 # ~~~~~~~~~~~~~~~~~~~~~~~
