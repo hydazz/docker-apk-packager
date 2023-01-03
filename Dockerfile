@@ -3,7 +3,7 @@ FROM alpine:${TAG}
 
 ENV TERM="xterm"
 
-RUN set -xe && \
+RUN  \
 	echo "**** install runtime packages ****" && \
 	apk add --no-cache \
 		alpine-sdk \
